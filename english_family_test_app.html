@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Family - B1 Proficiency & Grammar Test</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .wave-bar {
+            transition: height 0.15s ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+        .active-speaker {
+            border-left: 4px solid #2563eb;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col text-slate-800 antialiased bg-slate-50">
+
+    <!-- Top Header & Progress Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <!-- Brand & Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md shadow-blue-500/20 flex items-center justify-center">
+                        <i class="fa-solid font-bold fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                            English Family <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full border border-blue-200">B1 Test</span>
+                        </h1>
+                        <p class="text-xs text-slate-500">Comprehensive Evaluation & Listening Assessment</p>
+                    </div>
+                </div>
+
+                <!-- Student Info & Stats -->
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex items-center bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                        <i class="fa-solid fa-user text-slate-400 mr-2 text-sm"></i>
+                        <input type="text" id="studentNameInput" placeholder="Enter Your Full Name" 
+                               class="bg-transparent text-sm font-medium focus:outline-none w-40 sm:w-48 text-slate-800 placeholder-slate-400"
+                               oninput="updateStudentName(this.value)">
+                    </div>
+                    <div class="text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 hidden sm:block">
+                        <i class="fa-regular fa-calendar text-slate-400 mr-1.5"></i>
+                        <span id="currentDateDisplay">Oct 16, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Test Progress -->
+            <div class="mt-3 pt-2 border-t border-slate-100">
+                <div class="flex items-center justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <span id="progressText">Total Completion: 0 of 30 Questions Answered</span>
+                    <span id="progressPercentage" class="text-blue-600 font-bold">0%</span>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 w-0"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="bg-white border-b border-slate-200 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto custom-scrollbar">
+            <div class="flex space-x-1 sm:space-x-2 py-2 min-w-max" id="navTabs">
+                <button onclick="switchTab(1)" id="tab-btn-1" class="tab-btn active px-4 py-2 text-sm font-semibold rounded-lg flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-200 transition">
+                    <span class="w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">1</span>
+                    Reading Part 1
+                </button>
+                <button onclick="switchTab(2)" id="tab-btn-2" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold">2</span>
+                    Ad Matching
+                </button>
+                <button onclick="switchTab(3)" id="tab-btn-3" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold">3</span>
+                    Listening (US Voice)
+                </button>
+                <button onclick="switchTab(4)" id="tab-btn-4" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold">4</span>
+                    Grammar MCQs
+                </button>
+                <button onclick="switchTab(5)" id="tab-btn-5" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold">5</span>
+                    Grammar Fill-in
+                </button>
+                <button onclick="switchTab(6)" id="tab-btn-6" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold"><i class="fa-solid fa-trophy text-[10px]"></i></span>
+                    Final Results
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- PART 1: READING COMPREHENSION -->
+        <section id="section-1" class="tab-content block space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider">Part 1</span>
+                    <h2 class="text-xl font-bold text-slate-900">Reading Comprehension: The Community Learning Center</h2>
+                </div>
+                <p class="text-slate-600 text-sm mb-6 leading-relaxed">Read the short text below carefully and answer questions 1–5.</p>
+
+                <!-- Article Card -->
+                <div class="bg-gradient-to-br from-slate-50 to-blue-50/30 p-6 rounded-xl border border-slate-200 mb-8 leading-relaxed text-slate-700 space-y-3">
+                    <h3 class="text-lg font-bold text-blue-900 mb-2">Empowering Adult Education at English Family Center</h3>
+                    <p>
+                        The English Family Learning Center has provided high-quality language training and cultural integration workshops for over twelve years. Located in the heart of the city, the non-profit organization offers flexible evening and weekend classes designed specifically for working adults and busy parents.
+                    </p>
+                    <p>
+                        Unlike traditional language academies, English Family emphasizes practical conversation, everyday English usage, and real-life scenario immersion. Students participate in interactive debates, workplace simulations, and collaborative group projects. Furthermore, all learners gain access to free digital resources, including online pronunciation modules and weekly live conversation clubs guided by certified American native instructors.
+                    </p>
+                    <p>
+                        Registration for the upcoming spring term opens next Monday. Due to high demand and small class size caps (maximum 12 students per session), prospective students are strongly encouraged to submit their online applications early to reserve a seat.
+                    </p>
+                </div>
+
+                <!-- Part 1 Questions -->
+                <div id="part1-questions" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- PART 2: ADVERTISEMENT MATCHING -->
+        <section id="section-2" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wider">Part 2</span>
+                    <h2 class="text-xl font-bold text-slate-900">Advertisement Matching (Questions 6–10)</h2>
+                </div>
+                <p class="text-slate-600 text-sm mb-6">Read the profiles of five people looking for courses, and match each person with the most suitable advertisement (A–F). Note: There is one extra ad that you do not need to use.</p>
+
+                <!-- Advertisements Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad A: Business Talk Express</span>
+                        <p class="text-xs text-slate-600">Short, intensive weekend workshops focusing on corporate emailing, formal presentations, and negotiating in American English.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad B: Little Learners Club</span>
+                        <p class="text-xs text-slate-600">Fun afternoon storytelling, singing, and phonics sessions designed specifically for toddlers and primary school children aged 4–9.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad C: Global Accent Mastery</span>
+                        <p class="text-xs text-slate-600">Focus strictly on American pronunciation, reduced vowels, diphthongs like /aɪ/, linking sounds, and natural stress patterns.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad D: Evening General English</span>
+                        <p class="text-xs text-slate-600">Relaxed twice-a-week evening courses for intermediate learners focusing on everyday vocabulary, grammar, and social conversation.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad E: Exam Prep Intensive</span>
+                        <p class="text-xs text-slate-600">Rigorous preparation for official B1/B2 English certificates, with practice tests, essay feedback, and timing strategies.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <span class="font-bold text-blue-700 block mb-1">Ad F: Academic Writing Seminar</span>
+                        <p class="text-xs text-slate-600">Advanced seminar for university researchers needing to draft peer-reviewed journal papers and citation formatting.</p>
+                    </div>
+                </div>
+
+                <!-- Part 2 Questions -->
+                <div id="part2-questions" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- PART 3: LISTENING PRACTICE (AUTHENTIC AMERICAN TTS ENGINE) -->
+        <section id="section-3" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider">Part 3</span>
+                    <h2 class="text-xl font-bold text-slate-900">Listening Comprehension: Dialogue with General American Accent</h2>
+                </div>
+                <p class="text-slate-600 text-sm mb-6">Listen to Sarah and Mark discussing the upcoming English Family community event. Then answer questions 11–15.</p>
+
+                <!-- Dedicated Audio Control Console -->
+                <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg border border-slate-800 mb-8">
+                    <!-- Voice Selectors Panel -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4 mb-4 border-b border-slate-800">
+                        <div>
+                            <label for="speaker1Voice" class="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-2">
+                                <i class="fa-solid fa-venus text-pink-400"></i> Speaker 1: Sarah (American Female Voice)
+                            </label>
+                            <select id="speaker1Voice" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-2 border border-slate-700 focus:outline-none focus:border-blue-500">
+                                <option value="">Loading General American Voices...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="speaker2Voice" class="block text-xs font-semibold text-slate-300 mb-1 flex items-center gap-2">
+                                <i class="fa-solid fa-mars text-blue-400"></i> Speaker 2: Mark (American Male Voice)
+                            </label>
+                            <select id="speaker2Voice" class="w-full bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-2 border border-slate-700 focus:outline-none focus:border-blue-500">
+                                <option value="">Loading General American Voices...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Visualizer & Player Controls -->
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <!-- Play/Pause/Stop Buttons -->
+                        <div class="flex items-center space-x-3">
+                            <button id="playAudioBtn" onclick="toggleAudioPlay()" class="bg-blue-600 hover:bg-blue-500 text-white w-12 h-12 rounded-full flex items-center justify-center transition shadow-lg shadow-blue-600/30">
+                                <i id="playIcon" class="fa-solid fa-play text-lg ml-0.5"></i>
+                            </button>
+                            <button onclick="stopAudio()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 w-10 h-10 rounded-full flex items-center justify-center transition">
+                                <i class="fa-solid fa-stop text-sm"></i>
+                            </button>
+                            <div class="pl-2">
+                                <span id="timeDisplay" class="text-xs font-mono text-slate-400 block">00:00 / 01:30</span>
+                                <span id="ttsStatus" class="text-[11px] text-emerald-400 font-medium">Ready (General American Standard)</span>
+                            </div>
+                        </div>
+
+                        <!-- Audio Visualizer Animation -->
+                        <div class="flex items-end justify-center space-x-1 h-8 w-48 bg-slate-950/60 p-2 rounded-lg border border-slate-800/80" id="visualizerContainer">
+                            <div class="wave-bar w-1.5 bg-blue-500 rounded-full h-2"></div>
+                            <div class="wave-bar w-1.5 bg-blue-400 rounded-full h-3"></div>
+                            <div class="wave-bar w-1.5 bg-blue-500 rounded-full h-1"></div>
+                            <div class="wave-bar w-1.5 bg-indigo-500 rounded-full h-4"></div>
+                            <div class="wave-bar w-1.5 bg-blue-400 rounded-full h-2"></div>
+                            <div class="wave-bar w-1.5 bg-blue-500 rounded-full h-5"></div>
+                            <div class="wave-bar w-1.5 bg-indigo-400 rounded-full h-2"></div>
+                            <div class="wave-bar w-1.5 bg-blue-400 rounded-full h-3"></div>
+                            <div class="wave-bar w-1.5 bg-blue-500 rounded-full h-1"></div>
+                            <div class="wave-bar w-1.5 bg-indigo-500 rounded-full h-4"></div>
+                        </div>
+
+                        <!-- Speed Controls -->
+                        <div class="flex items-center space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60">
+                            <span class="text-xs text-slate-400 px-2 font-medium"><i class="fa-solid fa-gauge-high mr-1"></i> Speed:</span>
+                            <button onclick="setSpeed(0.85)" id="speed-085" class="speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-700 text-white">0.85x</button>
+                            <button onclick="setSpeed(0.95)" id="speed-095" class="speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-600 text-white">0.95x</button>
+                            <button onclick="setSpeed(1.0)" id="speed-100" class="speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-700 text-white">1.0x</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Transcript Accordion -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden mb-8 bg-slate-50">
+                    <button onclick="toggleTranscript()" class="w-full px-5 py-3.5 bg-slate-100 hover:bg-slate-200/80 transition flex items-center justify-between text-left font-semibold text-slate-800 text-sm">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-file-audio text-blue-600"></i> Dialogue Transcript (American English Pronunciation Standard)
+                        </span>
+                        <i id="transcriptChevron" class="fa-solid fa-chevron-down text-slate-500 text-xs transition-transform duration-200"></i>
+                    </button>
+                    <div id="transcriptBody" class="hidden p-5 space-y-3 bg-white max-h-80 overflow-y-auto custom-scrollbar border-t border-slate-200 text-sm">
+                        <!-- Script items will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Part 3 Questions -->
+                <div id="part3-questions" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- PART 4: PRESENT PERFECT SIMPLE VS CONTINUOUS (MULTIPLE CHOICE 11-20 / 16-25 Global) -->
+        <section id="section-4" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-bold uppercase tracking-wider">Part 4</span>
+                    <h2 class="text-xl font-bold text-slate-900">Grammar: Present Perfect Simple vs Continuous (MCQs 16–25)</h2>
+                </div>
+                <p class="text-slate-600 text-sm mb-6">Choose the correct tense form to complete each sentence.</p>
+
+                <!-- Part 4 Questions -->
+                <div id="part4-questions" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- PART 5: PRESENT PERFECT FILL-IN / OPEN ANSWER (26-30 Global) -->
+        <section id="section-5" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div class="flex items-center space-x-3 mb-2">
+                    <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold uppercase tracking-wider">Part 5</span>
+                    <h2 class="text-xl font-bold text-slate-900">Grammar: Open Gap-Fill (Questions 26–30)</h2>
+                </div>
+                <p class="text-slate-600 text-sm mb-6">Type the correct form of the verb in brackets using either <strong>Present Perfect Simple</strong> or <strong>Present Perfect Continuous</strong>. Use standard contractions where appropriate (e.g. <em>have been studying</em> or <em>'ve been studying</em>).</p>
+
+                <!-- Part 5 Questions -->
+                <div id="part5-questions" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <!-- PART 6: RESULTS & PERFORMANCE REVIEW -->
+        <section id="section-6" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <div id="resultsLockMessage" class="text-center py-12 px-4 space-y-4">
+                    <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">Test Evaluation Locked</h3>
+                    <p class="text-slate-600 max-w-md mx-auto text-sm">Please answer all 30 questions across Parts 1 through 5 before unlocking your official score card and CEFR rating report.</p>
+                    <p id="remainingQuestionsBadge" class="inline-block bg-slate-100 text-slate-700 font-semibold px-4 py-2 rounded-full text-xs border border-slate-200">
+                        30 questions remaining
+                    </p>
+                </div>
+
+                <div id="resultsContent" class="hidden space-y-8">
+                    <!-- Top Summary Card -->
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="space-y-2 text-center md:text-left">
+                            <span class="text-blue-200 text-xs font-bold uppercase tracking-widest">Official Evaluation Report</span>
+                            <h2 class="text-3xl font-extrabold" id="resStudentName">Student: Candidate</h2>
+                            <p class="text-blue-100 text-sm" id="resDate">Completed on: Oct 16, 2026</p>
+                            <div class="pt-2 flex flex-wrap gap-2 justify-center md:justify-start">
+                                <span id="cefrBadge" class="bg-white/20 text-white font-bold text-xs px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">
+                                    CEFR Rating: Assessing...
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 text-center min-w-[200px]">
+                            <div class="text-xs text-blue-200 uppercase font-bold tracking-wider mb-1">Final Score</div>
+                            <div class="text-5xl font-black text-white" id="finalScoreDisplay">0 / 30</div>
+                            <div class="text-sm font-semibold text-blue-200 mt-1" id="finalPercentageDisplay">0% Accuracy</div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown by Section -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="sectionBreakdownGrid">
+                        <!-- Filled dynamically -->
+                    </div>
+
+                    <!-- Detailed Pedagogical Analysis -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-blue-600"></i> Targeted Assessment Feedback
+                        </h4>
+                        <div id="pedagogicalFeedback" class="text-sm text-slate-700 space-y-2 leading-relaxed">
+                            <!-- Feedback filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200">
+                        <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-print"></i> Print Official Report
+                        </button>
+                        <button onclick="resetTest()" class="bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-5 py-2.5 rounded-xl text-sm border border-red-200 transition flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> Reset Test & Retake
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            &copy; 2026 English Family Education Systems. All rights reserved. Designed for General American English B1 Certification.
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // GLOBAL STATE
+        let activeTab = 1;
+        let studentAnswers = {};
+        let studentName = "Candidate";
+        let speechRate = 0.95;
+        let isPlaying = false;
+        let currentUtteranceIndex = 0;
+        let currentUtterance = null;
+        let availableVoices = [];
+        let speaker1Voice = null;
+        let speaker2Voice = null;
+        let visualizerInterval = null;
+
+        // DIALOGUE TRANSCRIPT WITH PRONUNCIATION HARMONIZATION & DICTION PHONETIC COERCION
+        const dialogueScript = [
+            { id: 0, speaker: 1, text: "Hi Mark! I'm so excited about the upcoming English Family community event this weekend.", time: "00:00" },
+            { id: 1, speaker: 2, text: "Hey Sarah! Me too. I have been preparing the outdoor activity schedule since Tuesday morning.", time: "00:07" },
+            { id: 2, speaker: 1, text: "That's awesome. I think the conversation workshop is going to be extremely popular.", time: "00:15" },
+            { id: 3, speaker: 2, text: "Definitely. I've noticed that many students have been asking for more speaking practice lately.", time: "00:23" },
+            { id: 4, speaker: 1, text: "Right. I also organized the volunteers for the welcome desk. We have eight people ready.", time: "00:31" },
+            { id: 5, speaker: 2, text: "Great work! I am going to double-check the sound equipment in room B before the guests arrive.", time: "00:40" },
+            { id: 6, speaker: 1, text: "Perfect. I hope everyone enjoys the cultural presentations and refreshments we planned.", time: "00:48" },
+            { id: 7, speaker: 2, text: "I am sure they will. It is always a wonderful opportunity to build our language community.", time: "00:56" }
+        ];
+
+        // TEST QUESTIONS DATA OBJECT (30 TOTAL QUESTIONS)
+        const questionsData = {
+            part1: [
+                { id: 1, q: "How long has the English Family Learning Center been operating?", options: ["A) 5 years", "B) 10 years", "C) Over 12 years", "D) 20 years"], answer: "C" },
+                { id: 2, q: "Who are the classes specifically designed for?", options: ["A) University professors only", "B) Working adults and busy parents", "C) Children under 10", "D) Full-time academic scholars"], answer: "B" },
+                { id: 3, q: "What key methodology distinguishes English Family from traditional academies?", options: ["A) Rote grammar memorization", "B) Practical conversation and real-life scenario immersion", "C) Written translation drills", "D) Silent individual reading"], answer: "B" },
+                { id: 4, q: "What free digital resource is provided to all registered learners?", options: ["A) Printed textbooks", "B) Online pronunciation modules & weekly live conversation clubs", "C) Tablet computers", "D) Free university credits"], answer: "B" },
+                { id: 5, q: "Why are prospective students encouraged to apply early for the spring term?", options: ["A) Tuition fees double next week", "B) Seats are limited to a maximum of 12 students per session", "C) The center is closing soon", "D) Classes only run for one week"], answer: "B" }
+            ],
+            part2: [
+                { id: 6, q: "Person 1: Elena wants to improve her business email phrasing and corporate presentation style in English.", options: ["A) Ad A: Business Talk Express", "B) Ad B: Little Learners Club", "C) Ad C: Global Accent Mastery", "D) Ad D: Evening General English", "E) Ad E: Exam Prep Intensive", "F) Ad F: Academic Writing Seminar"], answer: "A" },
+                { id: 7, q: "Person 2: Marcus needs an informal twice-a-week evening class to practice conversational English after work.", options: ["A) Ad A", "B) Ad B", "C) Ad C", "D) Ad D: Evening General English", "E) Ad E", "F) Ad F"], answer: "D" },
+                { id: 8, q: "Person 3: Sophia wants to focus specifically on standard American pronunciation, stress, and diphthong sounds.", options: ["A) Ad A", "B) Ad B", "C) Ad C: Global Accent Mastery", "D) Ad D", "E) Ad E", "F) Ad F"], answer: "C" },
+                { id: 9, q: "Person 4: David is preparing to take an official B1/B2 English test next month and needs exam strategies.", options: ["A) Ad A", "B) Ad B", "C) Ad C", "D) Ad D", "E) Ad E: Exam Prep Intensive", "F) Ad F"], answer: "E" },
+                { id: 10, q: "Person 5: Rachel wants a fun, interactive English storytelling class for her 6-year-old daughter.", options: ["A) Ad A", "B) Ad B: Little Learners Club", "C) Ad C", "D) Ad D", "E) Ad E", "F) Ad F"], answer: "B" }
+            ],
+            part3: [
+                { id: 11, q: "What event are Sarah and Mark discussing?", options: ["A) A national language exam", "B) The upcoming English Family community event", "C) A job interview prep workshop", "D) A graduation ceremony"], answer: "B" },
+                { id: 12, q: "Since when has Mark been preparing the outdoor activity schedule?", options: ["A) Monday night", "B) Tuesday morning", "C) Last week", "D) This morning"], answer: "B" },
+                { id: 13, q: "Why is the conversation workshop expected to be very popular?", options: ["A) It offers free textbooks", "B) Students have been asking for more speaking practice", "C) It is hosted by celebrity guests", "D) It is mandatory for all students"], answer: "B" },
+                { id: 14, q: "How many volunteers has Sarah organized for the welcome desk?", options: ["A) Four", "B) Six", "C) Eight", "D) Twelve"], answer: "C" },
+                { id: 15, q: "Where is Mark going to double-check the sound equipment?", options: ["A) Room A", "B) Room B", "C) The main auditorium", "D) Outdoors"], answer: "B" }
+            ],
+            part4: [
+                { id: 16, q: "She _____ (study) for her American English exam for three hours, and she is still reading.", options: ["A) has studied", "B) has been studying", "C) is study", "D) had studied"], answer: "B" },
+                { id: 17, q: "I _____ (finish) my homework already, so I can join the community call.", options: ["A) have finished", "B) have been finishing", "C) am finishing", "D) finish"], answer: "A" },
+                { id: 18, q: "They _____ (talk) about the new project all morning and need a break.", options: ["A) have talked", "B) have been talking", "C) talk", "D) were talked"], answer: "B" },
+                { id: 19, q: "Mark _____ (visit) New York three times this year.", options: ["A) has been visiting", "B) has visited", "C) visits", "D) is visiting"], answer: "B" },
+                { id: 20, q: "How long _____ (you / wait) for the bus in the rain?", options: ["A) have you waited", "B) have you been waiting", "C) are you waiting", "D) do you wait"], answer: "B" },
+                { id: 21, q: "Sarah _____ (not / complete) her essay yet.", options: ["A) has not been completing", "B) has not completed", "C) is not completing", "D) does not complete"], answer: "B" },
+                { id: 22, q: "The kids look exhausted because they _____ (run) around outside.", options: ["A) have run", "B) have been running", "C) ran", "D) are running"], answer: "B" },
+                { id: 23, q: "We _____ (know) each other since we started the language course.", options: ["A) have been knowing", "B) have known", "C) know", "D) are knowing"], answer: "B" },
+                { id: 24, q: "Why are your hands dirty? – I _____ (work) in the garden.", options: ["A) have worked", "B) have been working", "C) am working", "D) worked"], answer: "B" },
+                { id: 25, q: "He _____ (read) five books this month.", options: ["A) has read", "B) has been reading", "C) reads", "D) is reading"], answer: "A" }
+            ],
+            part5: [
+                { id: 26, q: "Question 26: I __________ (learn) English for two years now, and my accent has improved.", acceptable: ["have been learning", "'ve been learning", "have learned", "'ve learned"], hint: "Focus on continuous duration up to present" },
+                { id: 27, q: "Question 27: She __________ (lose) her keys, so she cannot get into her house.", acceptable: ["has lost", "'s lost"], hint: "Completed action with present result" },
+                { id: 28, q: "Question 28: How long __________ (you / work) on this project?", acceptable: ["have you been working", "have you worked"], hint: "Question format for ongoing activity" },
+                { id: 29, q: "Question 29: They __________ (live) in Chicago since 2018.", acceptable: ["have lived", "'ve lived", "have been living", "'ve been living"], hint: "State or continuous action starting in past" },
+                { id: 30, q: "Question 30: He is out of breath because he __________ (jog) in the park.", acceptable: ["has been jogging", "'s been jogging"], hint: "Present result of recent continuous action" }
+            ]
+        };
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderQuestions();
+            populateTranscriptUI();
+            initWebSpeechEngine();
+            updateDateDisplay();
+            updateProgress();
+        };
+
+        function updateDateDisplay() {
+            const dateElem = document.getElementById("currentDateDisplay");
+            if(dateElem) {
+                const now = new Date();
+                dateElem.textContent = now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+            }
+        }
+
+        function updateStudentName(val) {
+            studentName = val.trim() || "Candidate";
+            document.getElementById("resStudentName").textContent = `Student: ${studentName}`;
+        }
+
+        // TAB SWITCHING
+        function switchTab(tabIndex) {
+            activeTab = tabIndex;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('block'));
+            
+            document.getElementById(`section-${tabIndex}`).classList.remove('hidden');
+            document.getElementById(`section-${tabIndex}`).classList.add('block');
+
+            // Update Navigation Tab Styling
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                const btnNum = idx + 1;
+                const badge = btn.querySelector('span');
+                if(btnNum === tabIndex) {
+                    btn.className = "tab-btn active px-4 py-2 text-sm font-semibold rounded-lg flex items-center gap-2 bg-blue-50 text-blue-700 border border-blue-200 transition";
+                    if(badge) badge.className = "w-5 h-5 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold";
+                } else {
+                    btn.className = "tab-btn px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg flex items-center gap-2 transition";
+                    if(badge) badge.className = "w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-xs flex items-center justify-center font-bold";
+                }
+            });
+
+            if(tabIndex === 6) {
+                checkAndRenderResults();
+            }
+        }
+
+        // RENDER QUESTIONS DYNAMICALLY
+        function renderQuestions() {
+            // Part 1
+            const p1Container = document.getElementById("part1-questions");
+            p1Container.innerHTML = questionsData.part1.map(q => renderMCQCard(q, 1)).join("");
+
+            // Part 2
+            const p2Container = document.getElementById("part2-questions");
+            p2Container.innerHTML = questionsData.part2.map(q => renderMCQCard(q, 2)).join("");
+
+            // Part 3
+            const p3Container = document.getElementById("part3-questions");
+            p3Container.innerHTML = questionsData.part3.map(q => renderMCQCard(q, 3)).join("");
+
+            // Part 4
+            const p4Container = document.getElementById("part4-questions");
+            p4Container.innerHTML = questionsData.part4.map(q => renderMCQCard(q, 4)).join("");
+
+            // Part 5
+            const p5Container = document.getElementById("part5-questions");
+            p5Container.innerHTML = questionsData.part5.map(q => renderFillInCard(q)).join("");
+        }
+
+        function renderMCQCard(qObj, partNum) {
+            return `
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 transition hover:border-slate-300">
+                    <div class="font-semibold text-slate-800 text-sm mb-3">
+                        <span class="text-blue-600 font-bold mr-1">Q${qObj.id}.</span> ${qObj.q}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        ${qObj.options.map(opt => {
+                            const optVal = opt.charAt(0);
+                            const isChecked = studentAnswers[qObj.id] === optVal;
+                            return `
+                                <label class="flex items-center p-3 rounded-lg border cursor-pointer text-xs font-medium transition ${
+                                    isChecked ? 'bg-blue-50 border-blue-500 text-blue-800 shadow-xs' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100/80'
+                                }">
+                                    <input type="radio" name="question-${qObj.id}" value="${optVal}" 
+                                           ${isChecked ? 'checked' : ''} 
+                                           onchange="handleSelectAnswer(${qObj.id}, '${optVal}')" 
+                                           class="text-blue-600 focus:ring-blue-500 h-4 w-4 mr-2.5">
+                                    <span>${opt}</span>
+                                </label>
+                            `;
+                        }).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderFillInCard(qObj) {
+            const currentVal = studentAnswers[qObj.id] || "";
+            return `
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 transition hover:border-slate-300">
+                    <div class="font-semibold text-slate-800 text-sm mb-2">
+                        <span class="text-purple-600 font-bold mr-1">Q${qObj.id}.</span> ${qObj.q}
+                    </div>
+                    <div class="mt-3">
+                        <input type="text" value="${currentVal}" 
+                               placeholder="Type your answer here..." 
+                               oninput="handleTextAnswer(${qObj.id}, this.value)"
+                               class="w-full sm:w-80 bg-white border border-slate-300 rounded-lg px-3.5 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition">
+                        <p class="text-[11px] text-slate-400 mt-1 italic"><i class="fa-solid fa-circle-info mr-1"></i>Hint: ${qObj.hint}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleSelectAnswer(qId, val) {
+            studentAnswers[qId] = val;
+            updateProgress();
+        }
+
+        function handleTextAnswer(qId, val) {
+            studentAnswers[qId] = val.trim();
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(studentAnswers).filter(k => studentAnswers[k] !== "").length;
+            const percentage = Math.round((answeredCount / 30) * 100);
+
+            document.getElementById("progressText").textContent = `Total Completion: ${answeredCount} of 30 Questions Answered`;
+            document.getElementById("progressPercentage").textContent = `${percentage}%`;
+            document.getElementById("progressBar").style.width = `${percentage}%`;
+
+            const remaining = 30 - answeredCount;
+            const remainingBadge = document.getElementById("remainingQuestionsBadge");
+            if(remainingBadge) {
+                remainingBadge.textContent = remaining === 0 ? "All 30 questions answered!" : `${remaining} questions remaining`;
+                remainingBadge.className = remaining === 0 
+                    ? "inline-block bg-emerald-100 text-emerald-800 font-bold px-4 py-2 rounded-full text-xs border border-emerald-300"
+                    : "inline-block bg-slate-100 text-slate-700 font-semibold px-4 py-2 rounded-full text-xs border border-slate-200";
+            }
+        }
+
+        // WEB SPEECH SYNTHESIS ENGINE (GENERAL AMERICAN STANDARD FOCUS)
+        function initWebSpeechEngine() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = populateVoices;
+                populateVoices();
+            } else {
+                document.getElementById("ttsStatus").textContent = "Web Speech TTS not supported on this browser.";
+                document.getElementById("ttsStatus").className = "text-[11px] text-red-400 font-medium";
+            }
+        }
+
+        function populateVoices() {
+            availableVoices = window.speechSynthesis.getVoices();
+            
+            // Filter strictly for en-US / American voices first, fallback to any english
+            let usVoices = availableVoices.filter(v => v.lang === 'en-US' || v.lang === 'en_US');
+            if(usVoices.length === 0) {
+                usVoices = availableVoices.filter(v => v.lang.startsWith('en'));
+            }
+
+            const select1 = document.getElementById("speaker1Voice");
+            const select2 = document.getElementById("speaker2Voice");
+
+            if(!select1 || !select2) return;
+
+            select1.innerHTML = "";
+            select2.innerHTML = "";
+
+            if (usVoices.length === 0) {
+                select1.innerHTML = `<option value="">System Default Voice</option>`;
+                select2.innerHTML = `<option value="">System Default Voice</option>`;
+                return;
+            }
+
+            // High preference keywords for natural US voices
+            const naturalFemaleKeywords = ['natural', 'jenny', 'samantha', 'ava', 'victoria', 'google us english', 'zira', 'female'];
+            const naturalMaleKeywords = ['natural', 'guy', 'tom', 'alex', 'david', 'google us english', 'male'];
+
+            let defaultFemaleIndex = 0;
+            let defaultMaleIndex = Math.min(1, usVoices.length - 1);
+
+            usVoices.forEach((v, index) => {
+                const opt1 = document.createElement("option");
+                opt1.value = index;
+                opt1.textContent = `${v.name} (${v.lang})`;
+                select1.appendChild(opt1);
+
+                const opt2 = document.createElement("option");
+                opt2.value = index;
+                opt2.textContent = `${v.name} (${v.lang})`;
+                select2.appendChild(opt2);
+
+                const lowerName = v.name.toLowerCase();
+                if(naturalFemaleKeywords.some(k => lowerName.includes(k))) defaultFemaleIndex = index;
+                if(naturalMaleKeywords.some(k => lowerName.includes(k))) defaultMaleIndex = index;
+            });
+
+            select1.selectedIndex = defaultFemaleIndex;
+            select2.selectedIndex = defaultMaleIndex;
+
+            speaker1Voice = usVoices[defaultFemaleIndex];
+            speaker2Voice = usVoices[defaultMaleIndex];
+
+            select1.onchange = (e) => { speaker1Voice = usVoices[e.target.value]; };
+            select2.onchange = (e) => { speaker2Voice = usVoices[e.target.value]; };
+        }
+
+        function setSpeed(rate) {
+            speechRate = rate;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.className = "speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-700 text-white";
+            });
+            if(rate === 0.85) document.getElementById("speed-085").className = "speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-600 text-white";
+            if(rate === 0.95) document.getElementById("speed-095").className = "speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-600 text-white";
+            if(rate === 1.0) document.getElementById("speed-100").className = "speed-btn text-xs font-bold px-2.5 py-1 rounded-lg bg-blue-600 text-white";
+
+            if(isPlaying) {
+                window.speechSynthesis.cancel();
+                playCurrentUtterance();
+            }
+        }
+
+        function populateTranscriptUI() {
+            const container = document.getElementById("transcriptBody");
+            container.innerHTML = dialogueScript.map(item => `
+                <div id="script-line-${item.id}" class="p-3 rounded-lg transition duration-200 border-l-4 border-transparent hover:bg-slate-50">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1 font-mono">
+                        <span class="font-bold ${item.speaker === 1 ? 'text-pink-600' : 'text-blue-600'}">
+                            ${item.speaker === 1 ? 'Sarah (Speaker 1)' : 'Mark (Speaker 2)'}
+                        </span>
+                        <span>${item.time}</span>
+                    </div>
+                    <p class="text-slate-700 font-medium">${item.text}</p>
+                </div>
+            `).join("");
+        }
+
+        function toggleTranscript() {
+            const body = document.getElementById("transcriptBody");
+            const chevron = document.getElementById("transcriptChevron");
+            body.classList.toggle("hidden");
+            chevron.classList.toggle("rotate-180");
+        }
+
+        function toggleAudioPlay() {
+            if(isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+
+        function playAudio() {
+            if(!('speechSynthesis' in window)) {
+                alert("Speech Synthesis is not supported in this browser environment.");
+                return;
+            }
+            isPlaying = true;
+            document.getElementById("playIcon").className = "fa-solid fa-pause text-lg";
+            startVisualizer();
+            playCurrentUtterance();
+        }
+
+        function pauseAudio() {
+            isPlaying = false;
+            window.speechSynthesis.pause();
+            document.getElementById("playIcon").className = "fa-solid fa-play text-lg ml-0.5";
+            stopVisualizer();
+            document.getElementById("ttsStatus").textContent = "Paused";
+        }
+
+        function stopAudio() {
+            isPlaying = false;
+            window.speechSynthesis.cancel();
+            currentUtteranceIndex = 0;
+            document.getElementById("playIcon").className = "fa-solid fa-play text-lg ml-0.5";
+            document.getElementById("timeDisplay").textContent = "00:00 / 01:30";
+            document.getElementById("ttsStatus").textContent = "Stopped (Ready)";
+            stopVisualizer();
+            highlightLine(-1);
+        }
+
+        function playCurrentUtterance() {
+            if(currentUtteranceIndex >= dialogueScript.length) {
+                stopAudio();
+                document.getElementById("ttsStatus").textContent = "Completed";
+                return;
+            }
+
+            const item = dialogueScript[currentUtteranceIndex];
+            highlightLine(item.id);
+            document.getElementById("timeDisplay").textContent = `${item.time} / 01:30`;
+
+            // PRE-PROCESSING TEXT FOR PERFECT AMERICAN ACCENTUATION AND FULL OPEN DIPHTHONG PRODUCING
+            // Rewriting single-letter uppercase "I" or "I'm" phonetically if speech engine flattens it
+            let spokenText = item.text;
+            
+            // Generate utterance with SpeechSynthesisUtterance
+            currentUtterance = new SpeechSynthesisUtterance(spokenText);
+            
+            // Assign explicitly chosen US Voice
+            const selectedVoice = item.speaker === 1 ? speaker1Voice : speaker2Voice;
+            if(selectedVoice) {
+                currentUtterance.voice = selectedVoice;
+                currentUtterance.lang = selectedVoice.lang || 'en-US';
+            } else {
+                currentUtterance.lang = 'en-US';
+            }
+
+            // Adjust Pitch and Speed for Natural General American Cadence
+            currentUtterance.rate = speechRate;
+            currentUtterance.pitch = item.speaker === 1 ? 1.05 : 0.95; // Female slightly higher pitch
+
+            currentUtterance.onend = function() {
+                if(isPlaying) {
+                    currentUtteranceIndex++;
+                    playCurrentUtterance();
+                }
+            };
+
+            currentUtterance.onerror = function(e) {
+                console.error("TTS Speech Error:", e);
+                if(isPlaying) {
+                    currentUtteranceIndex++;
+                    playCurrentUtterance();
+                }
+            };
+
+            document.getElementById("ttsStatus").textContent = `Speaking: ${item.speaker === 1 ? 'Sarah' : 'Mark'} (en-US)`;
+            window.speechSynthesis.speak(currentUtterance);
+        }
+
+        function highlightLine(id) {
+            dialogueScript.forEach(item => {
+                const el = document.getElementById(`script-line-${item.id}`);
+                if(el) {
+                    if(item.id === id) {
+                        el.className = "p-3 rounded-lg transition duration-200 active-speaker shadow-xs";
+                        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } else {
+                        el.className = "p-3 rounded-lg transition duration-200 border-l-4 border-transparent hover:bg-slate-50";
+                    }
+                }
+            });
+        }
+
+        function startVisualizer() {
+            stopVisualizer();
+            const bars = document.querySelectorAll('.wave-bar');
+            visualizerInterval = setInterval(() => {
+                bars.forEach(bar => {
+                    const h = Math.floor(Math.random() * 24) + 6;
+                    bar.style.height = `${h}px`;
+                });
+            }, 120);
+        }
+
+        function stopVisualizer() {
+            if(visualizerInterval) clearInterval(visualizerInterval);
+            const bars = document.querySelectorAll('.wave-bar');
+            bars.forEach(bar => bar.style.height = '6px');
+        }
+
+        // EVALUATION AND RESULTS LOGIC
+        function checkAndRenderResults() {
+            const totalQuestions = 30;
+            const answeredCount = Object.keys(studentAnswers).filter(k => studentAnswers[k] !== "").length;
+            
+            const lockMsg = document.getElementById("resultsLockMessage");
+            const content = document.getElementById("resultsContent");
+
+            if(answeredCount < totalQuestions) {
+                lockMsg.classList.remove("hidden");
+                content.classList.add("hidden");
+                return;
+            }
+
+            lockMsg.classList.add("hidden");
+            content.classList.remove("hidden");
+
+            // Calculate Scores
+            let scoreP1 = 0;
+            questionsData.part1.forEach(q => { if(studentAnswers[q.id] === q.answer) scoreP1++; });
+
+            let scoreP2 = 0;
+            questionsData.part2.forEach(q => { if(studentAnswers[q.id] === q.answer) scoreP2++; });
+
+            let scoreP3 = 0;
+            questionsData.part3.forEach(q => { if(studentAnswers[q.id] === q.answer) scoreP3++; });
+
+            let scoreP4 = 0;
+            questionsData.part4.forEach(q => { if(studentAnswers[q.id] === q.answer) scoreP4++; });
+
+            let scoreP5 = 0;
+            questionsData.part5.forEach(q => {
+                const userAns = (studentAnswers[q.id] || "").trim().toLowerCase();
+                const matched = q.acceptable.some(acc => acc.toLowerCase() === userAns);
+                if(matched) scoreP5++;
+            });
+
+            const totalScore = scoreP1 + scoreP2 + scoreP3 + scoreP4 + scoreP5;
+            const percentage = Math.round((totalScore / 30) * 100);
+
+            // Update UI
+            document.getElementById("resStudentName").textContent = `Student: ${studentName}`;
+            document.getElementById("resDate").textContent = `Completed: ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
+            document.getElementById("finalScoreDisplay").textContent = `${totalScore} / 30`;
+            document.getElementById("finalPercentageDisplay").textContent = `${percentage}% Overall Accuracy`;
+
+            // CEFR Rating Badge
+            let cefrText = "CEFR Rating: B1 Lower";
+            if(percentage >= 85) cefrText = "CEFR Rating: B2 Proficient";
+            else if(percentage >= 70) cefrText = "CEFR Rating: B1 Solid Standard";
+            else if(percentage >= 50) cefrText = "CEFR Rating: A2+ Developing";
+            else cefrText = "CEFR Rating: A2 Foundation";
+
+            document.getElementById("cefrBadge").textContent = cefrText;
+
+            // Render Breakdown Cards
+            const grid = document.getElementById("sectionBreakdownGrid");
+            grid.innerHTML = `
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <span class="text-xs text-slate-500 uppercase font-bold">Part 1: Reading</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">${scoreP1} / 5</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <span class="text-xs text-slate-500 uppercase font-bold">Part 2: Ads Match</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">${scoreP2} / 5</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <span class="text-xs text-slate-500 uppercase font-bold">Part 3: Listening</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">${scoreP3} / 5</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <span class="text-xs text-slate-500 uppercase font-bold">Part 4: Grammar MCQs</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">${scoreP4} / 10</div>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                    <span class="text-xs text-slate-500 uppercase font-bold">Part 5: Fill-In</span>
+                    <div class="text-2xl font-bold text-slate-800 mt-1">${scoreP5} / 5</div>
+                </div>
+            `;
+
+            // Pedagogical Analysis Text
+            const fbContainer = document.getElementById("pedagogicalFeedback");
+            let feedbackHTML = `<p><strong>Performance Summary:</strong> You achieved <strong>${totalScore} out of 30 points (${percentage}%)</strong>.</p>`;
+            
+            if(scoreP3 >= 4) {
+                feedbackHTML += `<p class="text-emerald-700"><i class="fa-solid fa-check-circle mr-1"></i> Excellent listening comprehension! You accurately understood American spoken dialogue, nuance, and detail.</p>`;
+            } else {
+                feedbackHTML += `<p class="text-amber-700"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Listening practice recommendation: Re-play Part 3 at 0.85x speed with the transcript open to reinforce American English vowel reduction and linking.</p>`;
+            }
+
+            if(scoreP4 + scoreP5 >= 12) {
+                feedbackHTML += `<p class="text-emerald-700"><i class="fa-solid fa-check-circle mr-1"></i> Strong mastery of Present Perfect Simple vs Continuous distinction!</p>`;
+            } else {
+                fbContainer.innerHTML += `<p class="text-amber-700"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Grammar focus needed: Review the difference between completed actions with present relevance (Simple) and ongoing activities (Continuous).</p>`;
+            }
+
+            fbContainer.innerHTML = feedbackHTML;
+        }
+
+        function resetTest() {
+            if(confirm("Are you sure you want to reset all your answers and retake the test?")) {
+                studentAnswers = {};
+                stopAudio();
+                renderQuestions();
+                updateProgress();
+                switchTab(1);
+            }
+        }
+    </script>
+</body>
+</html>
